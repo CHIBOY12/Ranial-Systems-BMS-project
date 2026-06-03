@@ -32,4 +32,4 @@ Overall, this project combines hardware monitoring and firmware control to creat
 In simple terms, this project acts like a safety guard for a battery pack. It constantly checks the battery cells, current, and temperature. If something unsafe happens, such as a cell voltage getting too high or too much current being drawn, the system can detect it and help shut the battery down before damage occurs.
 
 
-<img width="5324" height="3124" alt="image" src="https://github.com/user-attachments/assets/4fc1a27a-9ff2-4043-b932-5c508f4e26f6" />
+<img width="5324" height="3128" alt="image" src="https://github.com/user-attachments/assets/876de440-1964-4b0c-992c-c1996512c67b" />
