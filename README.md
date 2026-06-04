@@ -158,7 +158,7 @@ The hardware for this project shall use the BQ76952 battery monitor IC to monito
 **HRS 20** – The hardware should be designed so that battery monitoring and protection can continue without requiring constant user input.
 
 
-## 2. User Persona
+#  User Persona
 
 ### Persona: Marcus Reed
 
