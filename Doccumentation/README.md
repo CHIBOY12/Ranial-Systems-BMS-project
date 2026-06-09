@@ -96,6 +96,37 @@ The users of this software are students, engineers, and technicians who need to 
 
 **SRS 18** – The software shall stop normal battery operation during serious faults by disabling charging or discharging until safe operating conditions are restored.
 
+**SRS 19** – The software shall identify a BQ76952 communication fault if the ESP32-C3 fails to receive valid data from the BQ76952 for 3 consecutive monitoring cycles.
+
+**SRS 20** – The software shall prevent charging and discharging from being reported as allowed when a BQ76952 communication fault is active.
+
+**SRS 21** – The software shall store configurable threshold values in non-volatile memory so the values can be retained after the ESP32-C3 loses power or resets.
+
+**SRS 22** – The software shall load default threshold values if stored configuration values are missing, corrupted, or outside a valid operating range.
+
+**SRS 23** – The software shall provide a method to reset configurable threshold values back to default values through firmware or user command.
+
+**SRS 24** – The software shall calculate total pack voltage by summing all 16 values stored in `cellVoltage_mV[16]`.
+
+**SRS 25** – The software shall identify the highest measured cell voltage and the lowest measured cell voltage during each monitoring cycle.
+
+**SRS 26** – The software shall calculate the voltage difference between the highest measured cell voltage and the lowest measured cell voltage during each monitoring cycle.
+
+**SRS 27** – The software shall report the highest cell voltage, lowest cell voltage, and cell voltage difference to the Serial Monitor and Wi-Fi dashboard.
+
+**SRS 28** – The software shall process battery monitoring tasks in a sequential order so voltage readings, current readings, temperature readings, fault checks, and dashboard updates do not interrupt each other.
+
+**SRS 29** – The software shall use a heartbeat output signal from the ESP32-C3 during normal operation to indicate that the firmware is still running correctly.
+
+**SRS 30** – The software shall stop the heartbeat output signal if the main monitoring loop stops running normally.
+
+**SRS 31** – The software shall save a fault state when a critical fault occurs so the fault can be reviewed before normal operation resumes.
+
+**SRS 32** – The software shall require all critical fault checks to pass before clearing a saved fault state.
+
+**SRS 33** – The software shall allow the Wi-Fi dashboard to display configurable protection thresholds for cell voltage, current, and temperature.
+
+**SRS 34** – The software should allow the Wi-Fi dashboard to update configurable protection thresholds when the 
 ## 2. Hardware Requirements Specification
 
 ### 2.1 Overview
@@ -153,6 +184,31 @@ The hardware for this project shall use the BQ76952 battery monitor IC to monito
 
 **HRS 18** – The hardware shall be designed so that battery monitoring and protection can continue without requiring constant user input.
 
+HRS 19** – The hardware shall include a hardware watchdog circuit or watchdog-compatible reset path to place the system into a safe state if the ESP32-C3 stops running normally.
+
+**HRS 20** – The hardware shall include a heartbeat signal connection from the ESP32-C3 to the watchdog circuit or watchdog-compatible safety input.
+
+**HRS 21** – The hardware shall default the charge and discharge protection path to a disabled or safe state when control power is lost.
+
+**HRS 22** – The hardware shall include a non-volatile memory method using ESP32-C3 internal flash or an external memory device for storing configuration values.
+
+**HRS 23** – The hardware shall support safe isolation between the high-voltage battery section and low-voltage user-interface circuitry where required by the final PCB layout.
+
+**HRS 24** – The hardware shall provide enough spacing and routing separation between high-voltage battery traces and low-voltage ESP32-C3 signal traces.
+
+**HRS 25** – The hardware shall include a clearly labeled connector or test point for the ESP32-C3 heartbeat signal.
+
+**HRS 26** – The hardware shall include clearly labeled polarity markings for the 16S cell tap harness connector.
+
+**HRS 27** – The hardware shall include a method to disconnect or disable charging when a critical fault condition is detected.
+
+**HRS 28** – The hardware shall include a method to disconnect or disable discharging when a critical fault condition is detected.
+
+**HRS 29** – The hardware shall support cell balancing heat dissipation through resistor placement, PCB copper area, or thermal spacing.
+
+**HRS 30** – The hardware shall place temperature sensing components close enough to safety-critical heat sources to detect unsafe temperature rise.
+
+**HRS 31** – The hardware shall allow the ESP32-C3 to be programmed or debugged without disconnecting the ful
 
 #  User Persona
 
