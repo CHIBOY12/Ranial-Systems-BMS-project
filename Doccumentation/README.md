@@ -60,87 +60,41 @@ The users of this software are students, engineers, and technicians who need to 
 
 ### 1.4 Functionality
 
-### Software Requirements Specification
+**SRS 01** – The software shall communicate with the BQ76952 battery monitor IC using the I2C protocol.
 
-**SRS 01** – The software shall initialize I2C communication between the ESP32-C3 and the BQ76952 at system startup using SDA and SCL pins assigned in firmware.
+**SRS 02** – The software shall read the voltage of each connected battery cell from the BQ76952.
 
-**SRS 02** – The software shall verify BQ76952 communication during startup by reading a device status or identification register before entering the main monitoring loop.
+**SRS 03** – The software shall compare each measred cell voltage against a minimun threshold of 2.80 V and a maximum threshold of 4.20 V.
 
-**SRS 03** – The software shall read voltage measurements for all 16 series-connected battery cells from the BQ76952 at least once every 1 second.
+**SRS 04** – The software shall identify an undervoltage fault when any cell voltage falls below 2.80 V. The ESP32-C3 shall monitor cell voltages from the BQ76952 and generate an undervoltage fault if this threshold is exceeded.
 
-**SRS 04** – The software shall store each cell voltage in millivolts in a 16-element array named `cellVoltage_mV[16]`.
+**SRS 05** – The software shall identify an overvoltage fault when any cell voltage rises above 4.20 V. The ESP32-C3 shall monitor cell voltages from the BQ76952 and disable charging when an overvoltage fault occurs.
 
-**SRS 05** – The software shall compare each cell voltage against a minimum cell voltage threshold of 3000 mV and a maximum cell voltage threshold of 4200 mV for a 16S Li-ion battery pack.
+**SRS 06** – The software shall use a ±50 mV tolerance margin to reduce false fault detection caused by noise and measurement errors. Temporary faults shall be ignored unless they persist for multiple readings.
 
-**SRS 06** – The software shall identify an undervoltage fault if any cell voltage is less than or equal to 3000 mV for 3 consecutive readings.
+**SRS 07** – The software shall read battery pack current using the shunt voltage measurement provided by the BQ76952.
 
-**SRS 07** – The software shall identify an overvoltage fault if any cell voltage is greater than or equal to 4200 mV for 3 consecutive readings.
+**SRS 08** – The software shall identify an overcurrent fault when discharge current exceeds 30 A or charge current exceeds 20 A, based on measurements provided by the BQ76952.
 
-**SRS 08** – The software shall use a voltage tolerance margin of ±50 mV when displaying warning conditions to reduce false warnings caused by measurement noise.
+**SRS 09** – The software shall read temperature data from the BQ76952 or connected temperature sensors.
 
-**SRS 09** – The software shall read pack current from the BQ76952 using the SRP/SRN shunt measurement at least once every 1 second.
+**SRS 10** – The software shall identify a temperature fault when battery temperature falls below 0°C or rises above 60°C using temperature data from connected thermistors.
 
-**SRS 10** – The software shall identify a discharge overcurrent fault if pack current exceeds the programmed discharge current limit for 2 consecutive readings.
+**SRS 11** – The software shall read BQ76952 fault registers to monitor overvoltage, undervoltage, overcurrent, short circuit, overtemperature, undertemperature, and cell balancing status.
 
-**SRS 11** – The software shall read temperature measurements from thermistors connected to TS1, TS2, and TS3 at least once every 1 second.
+**SRS 12** – The software shall report cell voltages, current, temperature, and fault conditions on the OLED display and through the Serial Monitor.
 
-**SRS 12** – The software shall identify an overtemperature fault if any measured temperature is greater than or equal to 60°C.
+**SRS 13** – The software shall use a Fault Management Module to detect unsafe conditions, display warnings, and trigger protection actions when faults occur.
 
-**SRS 13** – The software shall identify an undertemperature fault if any measured temperature is less than or equal to 0°C during charging.
+**SRS 14** – The software shall initialize the BQ76952 before normal battery monitoring begins.
 
-**SRS 14** – The software shall read the BQ76952 protection status registers once every monitoring cycle to check for overvoltage, undervoltage, overcurrent, short circuit, and temperature faults.
+**SRS 15** – The software shall support cell balancing by enabling balancing on higher voltage cells when the cell voltage difference exceeds 50 mV.
 
-**SRS 15** – The software shall turn on the fault LED and activate the buzzer when any critical fault is detected.
+**SRS 16** – The software shall allow voltage, current, temperature, and cell balancing thresholds to be adjusted in firmware for testing and calibration.
 
-**SRS 16** – The software shall turn off the fault LED and buzzer only after the fault condition is cleared and the system has completed a normal status check.
+**SRS 17** – The software shall respond to all critical faults reported by the BQ76952 by recording the fault, displaying a warning, and initiating protection actions.
 
-**SRS 17** – The software shall print cell voltages, pack current, temperature values, and active fault states to the Serial Monitor at least once every 1 second.
-
-**SRS 18** – The software shall send battery status data from the ESP32-C3 to a Wi-Fi dashboard at least once every 5 seconds when Wi-Fi is connected.
-
-**SRS 19** – The software shall initialize all required BQ76952 configuration settings before normal monitoring begins, including cell count, protection thresholds, temperature inputs, and alert behavior.
-
-**SRS 20** – The software shall use the BQ76952 ALERT signal as an ESP32-C3 GPIO input to detect when the BQ76952 reports a fault or important battery event.
-
-**SRS 21** – The software shall prevent normal battery operation from being reported as “safe” while any critical BQ76952 protection fault is active.
-
-**SRS 22** – The software shall support firmware-defined threshold constants for cell overvoltage, cell undervoltage, overcurrent, and temperature limits so values can be adjusted during testing.
-
-**SRS 23** – The software should support cell balancing by identifying cells that are at least 50 mV higher than the lowest measured cell voltage.
-
-**SRS 24** – The software should enable balancing only when the battery pack is charging and no critical fault is active.
-
-**SRS 25** – The software shall identify a BQ76952 communication fault if the ESP32-C3 fails to receive valid data from the BQ76952 for 3 consecutive monitoring cycles.
-
-**SRS 26** – The software shall prevent charging and discharging from being reported as allowed when a BQ76952 communication fault is active.
-
-**SRS 27** – The software shall store configurable threshold values in non-volatile memory so the values can be retained after the ESP32-C3 loses power or resets.
-
-**SRS 28** – The software shall load default threshold values if stored configuration values are missing, corrupted, or outside a valid operating range.
-
-**SRS 29** – The software shall provide a method to reset configurable threshold values back to default values through firmware or user command.
-
-**SRS 30** – The software shall calculate total pack voltage by summing all 16 values stored in `cellVoltage_mV[16]`.
-
-**SRS 31** – The software shall identify the highest measured cell voltage and the lowest measured cell voltage during each monitoring cycle.
-
-**SRS 32** – The software shall calculate the voltage difference between the highest measured cell voltage and the lowest measured cell voltage during each monitoring cycle.
-
-**SRS 33** – The software shall report the highest cell voltage, lowest cell voltage, and cell voltage difference to the Serial Monitor and Wi-Fi dashboard.
-
-**SRS 34** – The software shall process battery monitoring tasks in a sequential order so voltage readings, current readings, temperature readings, fault checks, and dashboard updates do not interrupt each other.
-
-**SRS 35** – The software shall use a heartbeat output signal from the ESP32-C3 during normal operation to indicate that the firmware is still running correctly.
-
-**SRS 36** – The software shall stop the heartbeat output signal if the main monitoring loop stops running normally.
-
-**SRS 37** – The software shall save a fault state when a critical fault occurs so the fault can be reviewed before normal operation resumes.
-
-**SRS 38** – The software shall require all critical fault checks to pass before clearing a saved fault state.
-
-**SRS 39** – The software shall allow the Wi-Fi dashboard to display configurable protection thresholds for cell voltage, current, and temperature.
-
-**SRS 40** – The software should allow the Wi-Fi dashboard to update configurable protection thresholds when th
+**SRS 18** – The software shall stop normal battery operation during serious faults by disabling charging or discharging until safe operating conditions are restored.
 
 ## 2. Hardware Requirements Specification
 
@@ -163,94 +117,41 @@ The hardware for this project shall use the BQ76952 battery monitor IC to monito
 
 ### 2.3 Functionality
 
-## Revised Hardware Requirements Specification
+**HRS 01** – The hardware shall use the BQ76952 battery monitor IC as the main battery monitoring device.
 
-**HRS 01** – The hardware shall use the BQ76952 as the main battery monitoring and protection IC for a 16-series Li-ion battery pack.
+**HRS 02** – The hardware shall support monitoring of a battery pack containing 3 to 16 series connected cells.
 
-**HRS 02** – The hardware shall support a 16S Li-ion battery pack with a nominal voltage of 59.2 V and a maximum fully charged voltage of 67.2 V.
+**HRS 03** – The hardware shall include I2C communication connections between the ESP32-C3 microcontroller and the BQ76952 battery monitor IC to allow configuration, monitoring, and fault reporting.
 
-**HRS 03** – The hardware shall provide 17 cell tap connections from the battery stack to the BQ76952, using VC0 through VC16.
+**HRS 04** – The hardware shall provide individual cell voltage connections from each battery cell to the BQ76952.
 
-**HRS 04** – The hardware shall connect each cell tap line to the BQ76952 through cell input RC filter components to reduce measurement noise.
+**HRS 05** – The hardware shall allow the BQ76952 to measure each individual cell voltage and send the readings to the ESP32-C3 through the I2C connection
 
-**HRS 05** – The hardware shall include a current sense shunt resistor in the negative current path between the battery stack negative terminal and PACK-.
+**HRS 06** – The hardware shall include a shunt resistor in the negative current path of the battery pack for current measurement.
 
-**HRS 06** – The hardware shall connect the two sides of the shunt resistor to the BQ76952 SRP and SRN pins for differential current sensing.
+**HRS 07** – The hardware shall allow the BQ76952 to measure the voltage across the shunt resistor.
 
-**HRS 07** – The hardware shall include 100 Ω series resistors on the SRP and SRN sense lines.
+**HRS 08** – The hardware shall support current measurement during charging and discharging.
 
-**HRS 08** – The hardware shall include a 100 nF differential filter capacitor between the SRP and SRN sense lines.
+**HRS 09** – The hardware shall include NTC thermistors connected to the BQ76952 temperature monitoring inputs to measure battery pack temperature.
 
-**HRS 09** – The hardware shall support current sensing during both battery charging and battery discharging through the same shunt resistor.
+**HRS 10** – The hardware shall include pull up resistors on the I2C communication lines if required by the circuit design
 
-**HRS 10** – The hardware shall include three temperature sensing inputs connected to the BQ76952 TS1, TS2, and TS3 pins.
+**HRS 11** – The hardware shall include protection components consisting of the BQ76952 protection circuitry, current sense shunt resistor, N-channel MOSFETs, temperature sensors, and battery voltage sensing connections.
 
-**HRS 11** – The hardware shall use one thermistor near the battery cell stack, one thermistor near the MOSFET protection area, and one thermistor for ambient or additional pack temperature monitoring.
+**HRS 12** – The hardware shall support high side N-channel MOSFET control driven by the BQ76952 to disconnect the battery pack during critical fault conditions.
 
-**HRS 12** – The hardware shall connect the BQ76952 SDA and SCL pins to the ESP32-C3 I2C bus.
+**HRS 13** – The hardware shall allow the BQ76952 to disconnect or protect the battery pack during overvoltage, undervoltage, overcurrent, short circuit, or overtemperature conditions.
 
-**HRS 13** – The hardware shall include pull-up resistors from SDA and SCL to the 3.3 V logic rail.
+**HRS 14** – The hardware shall support passive cell balancing using the balancing circuitry integrated within the BQ76952 and balancing resistors to discharge higher-voltage cells.
 
-**HRS 14** – The hardware shall connect the BQ76952 ALERT pin to an ESP32-C3 GPIO input pin for fault interrupt detection.
+**HRS 15** – The hardware shall be powered from the battery pack or an appropriate regulated supply.
 
-**HRS 15** – The hardware shall include charge and discharge protection MOSFETs controlled by the BQ76952 CHG and DSG outputs.
+**HRS 16** – The hardware shall include appropriate connectors for the battery cells, microcontroller, communication lines, thermistors, and measurement points.
 
-**HRS 16** – The hardware shall include precharge and predischarge MOSFET control paths using the BQ76952 PCHG and PDSG outputs.
+**HRS 17** – The hardware shall include test points for cell voltage, pack voltage, current sense, ground, and communication signals.
 
-**HRS 17** – The hardware shall route the main high-current battery path through the protection MOSFETs before reaching the PACK+ and PACK- output terminals.
-
-**HRS 18** – The hardware shall provide PACK+ and PACK- output connectors for connection to an external load or charger.
-
-**HRS 19** – The hardware shall include a high-voltage buck converter that converts the 16S battery voltage range to a regulated 3.3 V output.
-
-**HRS 20** – The 3.3 V rail shall power the ESP32-C3, I2C pull-up resistors, status LEDs, and low-voltage user-interface circuitry.
-
-**HRS 21** – The hardware shall include a status LED connected to an ESP32-C3 GPIO pin.
-
-**HRS 22** – The hardware shall include a fault LED connected to an ESP32-C3 GPIO pin.
-
-**HRS 23** – The hardware shall include a fault buzzer connected to an ESP32-C3 GPIO or PWM-capable pin.
-
-**HRS 24** – The hardware shall include a reset or wake button connected to the ESP32-C3 or BQ76952 wake/shutdown control circuit.
-
-**HRS 25** – The hardware shall include cell balancing connections for all 16 cells through the BQ76952 VC0–VC16 cell monitoring network.
-
-**HRS 26** – The hardware shall include test points for PACK+, PACK-, 3.3 V, GND, SDA, SCL, ALERT, SRP, and SRN.
-
-**HRS 27** – The hardware shall include connectors for the 16S cell tap harness, PACK+/PACK- output, thermistors, and ESP32-C3 programming/debug access.
-
-**HRS 28** – The hardware shall not connect the 16S battery pack directly to the ESP32-C3 without voltage regulation.
-
-**HRS 29** – The hardware shall not bypass the shunt resistor in the main current path when current measurement is required.
-
-**HRS 30** – The hardware shall not connect battery cell tap lines to the wrong BQ76952 VC pins, since incorrect VC order can damage the BQ76952 or produce unsafe voltage readings.
-
-**HRS 31** – The hardware shall include a hardware watchdog circuit or watchdog-compatible reset path to place the system into a safe state if the ESP32-C3 stops running normally.
-
-**HRS 32** – The hardware shall include a heartbeat signal connection from the ESP32-C3 to the watchdog circuit or watchdog-compatible safety input.
-
-**HRS 33** – The hardware shall default the charge and discharge protection path to a disabled or safe state when control power is lost.
-
-**HRS 34** – The hardware shall include a non-volatile memory method using ESP32-C3 internal flash or an external memory device for storing configuration values.
-
-**HRS 35** – The hardware shall support safe isolation between the high-voltage battery section and low-voltage user-interface circuitry where required by the final PCB layout.
-
-**HRS 36** – The hardware shall provide enough spacing and routing separation between high-voltage battery traces and low-voltage ESP32-C3 signal traces.
-
-**HRS 37** – The hardware shall include a clearly labeled connector or test point for the ESP32-C3 heartbeat signal.
-
-**HRS 38** – The hardware shall include clearly labeled polarity markings for the 16S cell tap harness connector.
-
-**HRS 39** – The hardware shall include a method to disconnect or disable charging when a critical fault condition is detected.
-
-
-**HRS 40** – The hardware shall include a method to disconnect or disable discharging when a critical fault condition is detected.
-
-**HRS 41** – The hardware shall support cell balancing heat dissipation through resistor placement, PCB copper area, or thermal spacing.
-
-**HRS 42** – The hardware shall place temperature sensing components close enough to safety-critical heat sources to detect unsafe temperature rise.
-
-**HRS 43** – The hardware shall allow the ESP32-C3 to be programmed or debugged without disconnecting the full B
+**HRS 18** – The hardware shall be designed so that battery monitoring and protection can continue without requiring constant user input.
 
 
 #  User Persona
