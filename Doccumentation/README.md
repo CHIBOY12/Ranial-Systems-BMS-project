@@ -101,11 +101,8 @@ Overall, this project combines hardware monitoring and firmware control to creat
 
 The software for this project shall control and monitor a Battery Management System using a microcontroller and the BQ76952 battery monitor IC. The software shall communicate with the BQ76952 using I2C, read battery measurements, check for unsafe operating conditions, and respond to faults. The software shall help protect the battery pack by monitoring cell voltage, pack current, temperature, and device status.
 
-### 1.2 Users
 
-The users of this software are students, engineers, and technicians who need to monitor the condition of a rechargeable battery pack. The user does not directly control the battery cells but can use the system to view battery status, detect faults, and verify that the battery pack is operating safely.
-
-### 1.3 Definitions and Abbreviations
+### 1.2 Definitions and Abbreviations
 
 - **BMS**: Battery Management System  
 - **MCU**: Microcontroller Unit  
