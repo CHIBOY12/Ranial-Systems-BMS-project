@@ -2,7 +2,7 @@
 #include "bms_config.h"
 #include "bms_data.h"
 
-void bmsUpdateProtection() {
+void bmsUpdateProtection() {//
   pack.faultActive = false;
   pack.chargeAllowed = true;
   pack.dischargeAllowed = true;
