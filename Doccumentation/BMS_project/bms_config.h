@@ -1,0 +1,13 @@
+#ifndef BMS_CONFIG_H
+#define BMS_CONFIG_H
+
+#define NUM_CELLS 4
+#define NUM_TEMP_SENSORS 4
+
+#define CELL_OVERVOLTAGE_MV 4200
+#define CELL_UNDERVOLTAGE_MV 3000
+
+#define MAX_CELL_TEMP_C 60
+#define MIN_CELL_TEMP_C 0
+
+#endif

@@ -1,4 +1,3 @@
-int cellVoltage_mV[NUM_CELLS];
+#include "battery_monitor.h"
 
-void readAllCellVoltages();
-int getPackVoltage();
+int cellVoltage_mV[NUM_CELLS];
