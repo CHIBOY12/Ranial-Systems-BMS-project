@@ -2,6 +2,11 @@
 #include "bms_config.h"
 #include "bms_data.h"
 
+// This file handles the BMS protection logic.
+// It checks for unsafe battery conditions and updates the pack fault flags.
+// Protection handled here: over-voltage, under-voltage, over-temperature,
+// over-current, short circuit, and charge/discharge permission.
+
 void bmsUpdateProtection() {//
   pack.faultActive = false;
   pack.chargeAllowed = true;
@@ -31,4 +36,27 @@ void bmsUpdateProtection() {//
       pack.dischargeAllowed = false;
     }
   }
+    // Check for over current condition.
+  if (pack.current_A > MAX_DISCHARGE_CURRENT_A) {
+    pack.overCurrent = true;
+    pack.faultActive = true;
+    pack.dischargeAllowed = false;
+  }
+
+  // Check for short circuit condition.
+  if (pack.current_A > SHORT_CIRCUIT_CURRENT_A) {
+    pack.shortCircuit = true;
+    pack.faultActive = true;
+    pack.chargeAllowed = false;
+    pack.dischargeAllowed = false;
+  }
+
+  // Store pack level over temperature status.
+  pack.overTemperature = false;
+  for (int i = 0; i < NUM_CELLS; i++) {
+    if (pack.cells[i].overTemp) {
+      pack.overTemperature = true;
+    }
+  }
+
 }

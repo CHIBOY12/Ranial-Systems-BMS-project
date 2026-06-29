@@ -3,9 +3,16 @@
 #include "bq76952_driver.h"
 
 void bmsUpdateFets() {
-  if (pack.faultActive) {
-    bq76952SetFETs(false, false);
-  } else {
-    bq76952SetFETs(pack.chargeAllowed, pack.dischargeAllowed);
-  }
+
+    // If any protection fault is active,
+    // immediately disable both charge and discharge FETs.
+    if (pack.faultActive) {
+        bq76952SetFETs(false, false);
+    }
+    else {
+        // Otherwise, enable or disable each FET
+        // according to the protection logic.
+        bq76952SetFETs(pack.chargeAllowed,
+                       pack.dischargeAllowed);
+    }
 }

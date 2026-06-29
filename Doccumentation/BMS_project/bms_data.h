@@ -17,6 +17,10 @@ struct PackData {
   int packVoltage_mV;
   float current_A;
 
+bool overCurrent;
+bool shortCircuit;
+bool overTemperature;
+
   int minCellVoltage_mV;
   int maxCellVoltage_mV;
 

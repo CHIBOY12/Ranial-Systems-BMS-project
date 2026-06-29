@@ -9,6 +9,9 @@ void bq76952ReadPackVoltage(int &packVoltage_mV);
 void bq76952ReadCurrent(float &current_A);
 void bq76952ReadTemperatures(int cellTemp_C[]);
 
+uint16_t bq76952ReadProtectionStatus();
+void bq76952SendSubcommand(uint16_t subcommand);
+
 void bq76952SetFETs(bool chargeEnable, bool dischargeEnable);
 void bq76952SetBalancing(uint16_t balanceMask);
 

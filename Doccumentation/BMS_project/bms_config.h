@@ -10,4 +10,8 @@
 #define MAX_CELL_TEMP_C 60
 #define MIN_CELL_TEMP_C 0
 
+// Current protection limits
+#define MAX_DISCHARGE_CURRENT_A 10.0
+#define SHORT_CIRCUIT_CURRENT_A 30.0
+
 #endif
