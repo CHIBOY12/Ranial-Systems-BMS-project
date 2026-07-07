@@ -19,10 +19,13 @@
 #define BQ76952_CC2_CURRENT   0x3A
 
 // Temperature direct command registers
-#define BQ76952_INT_TEMP      0x68
-#define BQ76952_TS1_TEMP      0x70
-#define BQ76952_TS2_TEMP      0x72
-#define BQ76952_TS3_TEMP      0x74
+#define BQ76952_INT_TEMP      0x68 // internal temp
+#define BQ76952_TS1_TEMP      0x70 // ts1
+#define BQ76952_TS2_TEMP      0x72 // ts2
+#define BQ76952_TS3_TEMP      0x74 // ts3
+#define BQ76952_HDQ_TEMP      0x76 // hdq
+#define BQ76952_DCHG_TEMP     0x78 // dchg
+#define BQ76952_DDSG_TEMP     0x7A // ddsg
 
 // Safety alert/status registers
 #define BQ76952_SAFETY_ALERT_A  0x02
