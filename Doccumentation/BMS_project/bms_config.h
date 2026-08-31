@@ -7,7 +7,7 @@
 
 
 #define NUM_CELLS 4          // Number of battery cells connected in series
-#define NUM_TEMP_SENSORS 4   // Number of temperature sensors (thermistors) used
+#define NUM_TEMP_SENSORS 7   // Number of temperature sensors (thermistors) used
 
 //------------------------------------------------------------
 // Voltage Protection Thresholds (millivolts)

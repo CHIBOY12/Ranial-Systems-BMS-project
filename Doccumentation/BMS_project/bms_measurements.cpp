@@ -22,34 +22,50 @@
 //------------------------------------------------------------
 
 void bmsReadMeasurements() {
-  bq76952ReadCellVoltages(cellVoltage_mV);        // Read the voltage of every battery cell from the BQ76952.
-  bq76952ReadPackVoltage(pack.packVoltage_mV);    // Read the total battery pack voltage.
-  bq76952ReadCurrent(pack.current_A);             // Read the battery pack current.
-  bq76952ReadTemperatures(cellTemp_C);            // Read all temperature sensor values.
+  // Read voltage, current, and temperature data from the BQ76952.
+  bq76952ReadCellVoltages(cellVoltage_mV);
+  bq76952ReadPackVoltage(pack.packVoltage_mV);
+  bq76952ReadCurrent(pack.current_A);
+  bq76952ReadTemperatures(cellTemp_C);
 
-
-    // Initialize the minimum and maximum cell voltages
-    // using the first cell's voltage.
+  /*
+    Initialize the minimum and maximum cell voltage values
+    using Cell 1 as the starting reference.
+  */
   pack.minCellVoltage_mV = cellVoltage_mV[0];
   pack.maxCellVoltage_mV = cellVoltage_mV[0];
 
-  for (int i = 0; i < NUM_CELLS; i++) {           // Loop through every battery cell.
+  /*
+    Copy the latest cell voltage readings into the main pack structure.
 
-    // Store the latest voltage measurement
-    // into the battery pack structure.
+    This loop also finds the lowest and highest cell voltage in the pack.
+  */
+  for (int i = 0; i < NUM_CELLS; i++) {
+    // Store the latest voltage measurement for this cell.
     pack.cells[i].voltage_mV = cellVoltage_mV[i];
 
-    // Store the latest temperature measurement
-    // into the battery pack structure.
-    pack.cells[i].temperature_C = cellTemp_C[i];
-
-    if (cellVoltage_mV[i] < pack.minCellVoltage_mV) {  // Check if this cell has the lowest voltage.
-
-      pack.minCellVoltage_mV = cellVoltage_mV[i];      // Update the minimum cell voltage.
+    // Check for the lowest cell voltage.
+    if (cellVoltage_mV[i] < pack.minCellVoltage_mV) {
+      pack.minCellVoltage_mV = cellVoltage_mV[i];
     }
 
-    if (cellVoltage_mV[i] > pack.maxCellVoltage_mV) {  // Check if this cell has the highest voltage.
-      pack.maxCellVoltage_mV = cellVoltage_mV[i];      // Update the maximum cell voltage.
+    // Check for the highest cell voltage.
+    if (cellVoltage_mV[i] > pack.maxCellVoltage_mV) {
+      pack.maxCellVoltage_mV = cellVoltage_mV[i];
     }
   }
+
+  /*
+    Assign physical temperature sensor readings to each battery cell.
+
+    This is separate from the voltage loop because the temperature array
+    includes more than just cell temperatures.
+
+    cellTemp_C[0] is the internal BQ76952 temperature, so it should not
+    automatically be used as Cell 1 temperature.
+  */
+  pack.cells[0].temperature_C = cellTemp_C[1];  // Cell 1 temperature from TS1
+  pack.cells[1].temperature_C = cellTemp_C[2];  // Cell 2 temperature from TS2
+  pack.cells[2].temperature_C = cellTemp_C[3];  // Cell 3 temperature from TS3
+  pack.cells[3].temperature_C = cellTemp_C[4];  // Cell 4 temperature from HDQ
 }
