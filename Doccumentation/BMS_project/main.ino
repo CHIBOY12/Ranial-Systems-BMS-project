@@ -1,5 +1,5 @@
 #include <Wire.h>              // Arduino I2C communication library
-#include "bq76952_driver.h"    // Low level BQ76952 communication configuration
+#include "bq76952_driver.h"    // Low-level BQ76952 communication/configuration
 #include "bms_measurements.h"  // Reads battery measurements from the BQ76952
 #include "bms_protection.h"    // Handles battery protection logic
 #include "fault_manager.h"     // Manages system fault conditions
@@ -20,7 +20,7 @@ void setup() {
     Serial.println("WARNING: BQ76952 initialization failed.");
   }
 
-  // Clear ESP32 side software fault flags before entering the main loop.
+  // Clear ESP32-side software fault flags before entering the main loop.
   clearFaults();
 }
 
@@ -37,5 +37,4 @@ void loop() {
   printSystemStatus();    // Display battery information and active faults
 
   delay(1000);            // Wait 1 second before repeating the loop
-  
 }

@@ -64,7 +64,7 @@
 #define BQ76952_DM_CHECKSUM 0x60
 #define BQ76952_DM_LENGTH   0x61
 
-// Multifunction pin Data Memory addresses
+// Multifunction-pin Data Memory addresses
 #define BQ76952_TS1_CONFIG  0x92FD
 #define BQ76952_TS2_CONFIG  0x92FE
 #define BQ76952_TS3_CONFIG  0x92FF
@@ -75,7 +75,7 @@
 // 18-kohm thermistor configuration for the TS1, TS2, and TS3 inputs.
 #define BQ76952_THERMISTOR_CONFIG 0x0B
 
-// Current and short circuit protection Data Memory addresses.
+// Current and short-circuit protection Data Memory addresses.
 // These registers define programmable OCC, OCD, and SCD protection settings.
 #define BQ76952_ENABLED_PROTECTIONS_A 0x9261
 #define BQ76952_CHG_FET_PROTECTIONS_A 0x9265
@@ -89,8 +89,8 @@
 #define BQ76952_SCD_THRESHOLD         0x9286
 #define BQ76952_SCD_DELAY             0x9287
 
-// Current short circuit protection settings based on TI BQ76952 defaults.
-// With the 1 mohm sense resistor on the BQ76952EVM, the thresholds correspond
+// Current/short-circuit protection settings based on TI BQ76952 defaults.
+// With the 1-mohm sense resistor on the BQ76952EVM, the thresholds correspond
 // to approximately 4 A OCC, 8 A OCD1, 6 A OCD2, and 10 A SCD.
 #define BQ76952_OCC_THRESHOLD_VALUE   0x02
 #define BQ76952_OCC_DELAY_VALUE       0x04
@@ -104,7 +104,7 @@
 // Enable SCD, OCD2, OCD1, OCC, and COV.
 #define BQ76952_ENABLED_PROTECTIONS_A_VALUE 0xF8
 
-// Fast autonomous FET response masks recommended defaulted by TI.
+// Fast autonomous FET response masks recommended/defaulted by TI.
 #define BQ76952_CHG_FET_PROTECTIONS_A_VALUE 0x98
 #define BQ76952_DSG_FET_PROTECTIONS_A_VALUE 0xE4
 
