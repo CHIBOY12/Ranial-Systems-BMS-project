@@ -1,4 +1,4 @@
-#include "bms_measurements.h"        // Measurement function declarations
+#include "bms_measurements.h"        // Measurement function declarations                                                                                                        
 #include "bms_config.h"              // System configuration constants
 #include "bms_data.h"                // Global battery data structure
 #include "battery_monitor.h"         // Cell voltage storage array
@@ -7,7 +7,7 @@
 
 
 //------------------------------------------------------------
-// Battery Measurement Function
+// Battery Measurement Function 
 //------------------------------------------------------------
 // Reads all battery measurements from the BQ76952 and updates
 // the shared battery pack data structure.

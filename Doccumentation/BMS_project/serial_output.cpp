@@ -22,6 +22,12 @@ void printPackVoltage() {
   Serial.println(" mV");
 }
 
+void printCurrent() {
+  Serial.print("Current: ");
+  Serial.print(pack.current_A);
+  Serial.println(" A");
+}
+
 void printTemperatures() {
   Serial.println("Temperatures:");
 
@@ -61,6 +67,14 @@ void printFaults() {
   if (faults.overtemperature) {
     Serial.println("Overtemperature fault");
   }
+
+  if (faults.overCurrent) {
+    Serial.println("Overcurrent fault");
+  }
+
+  if (faults.shortCircuit) {
+    Serial.println("Short-circuit fault");
+  }
 }
 
 void printSystemStatus() {
@@ -69,11 +83,7 @@ void printSystemStatus() {
 
   printCellVoltages();
   printPackVoltage();
-
-  Serial.print("Current: ");
-  Serial.print(pack.current_A);
-  Serial.println(" A");
-
+  printCurrent();
   printTemperatures();
   printFaults();
 

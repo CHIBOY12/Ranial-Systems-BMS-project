@@ -1,6 +1,6 @@
 #ifndef BATTERY_MONITOR_H   // Prevent this header file from being included multiple times
 #define BATTERY_MONITOR_H   
-
+ 
 #include "bms_config.h"      // Include system configuration constants (such as NUM_CELLS)
 
 // Declare the global array that stores the voltage of each battery cell.
